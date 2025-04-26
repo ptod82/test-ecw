@@ -1,126 +1,144 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { Chart } from "chart.js";
 import {
-  ComposableMap,
-  ZoomableGroup,
-  Geographies,
-  Geography,
-} from "react-simple-maps";
+  ChoroplethController,
+  GeoFeature,
+  ProjectionScale,
+  ColorScale,
+} from "chartjs-chart-geo";
+import { CategoryScale, LinearScale, Tooltip, Legend } from "chart.js";
+import * as ChartGeo from "chartjs-chart-geo";
 
-// Sample data - Replace this with your actual data (e.g., population, GDP, etc.)
-const countryData = {
-  "United States": 100,
-  Canada: 30,
-  Brazil: 20,
-  Germany: 85,
-  India: 30,
-  Australia: 60,
-  China: 90,
-  // Add more countries and data
+Chart.register(
+  ChoroplethController,
+  GeoFeature,
+  ProjectionScale,
+  ColorScale,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+);
+
+const countryValues = {
+  Afghanistan: { value: 75, FERs: "F", MYRPs: "M" },
+  Uganda: { value: 65, FERs: "", MYRPs: "M" },
+  Brazil: { value: 80, FERs: "F", MYRPs: "M" },
+  India: { value: 90, FERs: "F", MYRPs: "" },
+  China: { value: 50, FERs: "F", MYRPs: "" },
+  Tanzania: { value: 60, FERs: "F", MYRPs: "M" },
+  Somalia: { value: 55, FERs: "F", MYRPs: "" },
+  Benin: { value: 70, FERs: "F", MYRPs: "M" },
 };
 
-const WorldMap = () => {
-  // GeoJSON URL for world countries
-  const geoUrl =
-    "https://cdn.jsdelivr.net/gh/johan/world.geo.json@master/countries.geo.json";
-
-  const [data, setData] = useState(null);
-  const [tooltipContent, setTooltipContent] = useState("");
-  const [clickedCountry, setClickedCountry] = useState(null);
+export default function WorldMap() {
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
 
   useEffect(() => {
-    const fetchGeoJson = async () => {
-      const res = await fetch(geoUrl);
-      const geoData = await res.json();
-      setData(geoData);
-    };
+    async function fetchWorldData() {
+     const res = await fetch(
+       "https://unpkg.com/world-atlas@2.0.2/countries-50m.json"
+     );
+     const world = await res.json();
+     const countries = ChartGeo.topojson
+       .feature(world, world.objects.countries)
+       .features.filter((feature) => feature.properties.name !== "Antarctica" );
 
-    fetchGeoJson();
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
+
+      chartRef.current = new Chart(canvasRef.current, {
+        type: "choropleth",
+        data: {
+          labels: countries.map((d) => d.properties.name),
+          datasets: [
+            {
+              label: "Countries",
+              data: countries.map((d) => ({
+                feature: d,
+                value: countryValues[d.properties.name]?.value ?? 0,
+                MYRPs: countryValues[d.properties.name]?.MYRPs,
+                FERs: countryValues[d.properties.name]?.FERs,
+              })),
+              showGraticule: false,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            projection: {
+              axis: "x",
+              projection: "mercator",
+              zoom: 2,
+            },
+          },
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                title: function (context) {
+                  // Get the country name properly
+                  return context[0]?.raw?.feature?.properties?.name || "";
+                },
+                label: function (context) {
+                  const value = context.raw?.value ?? 0;
+
+                  if (value !== 0) {
+                    return ` $${value} M`;
+                  }
+                  return null;
+                },
+                labelTextColor: function () {
+                  return "#000";
+                },
+                footer: function (context) {
+                  const MYRPs = context[0]?.raw?.MYRPs || "";
+                  const FERs = context[0]?.raw?.FERs || "";
+
+                  if (MYRPs || FERs) {
+                    return `${MYRPs} ${FERs}`;
+                  }
+                  return null;
+                },
+              },
+              backgroundColor: "#f1f1f1",
+              titleColor: "#000",
+              footerColor: "#333",
+              footerFont: { weight: "normal" },
+              borderColor: "#ccc",
+              borderWidth: 1,
+            },
+          },
+        },
+      });
+    }
+
+    fetchWorldData();
+
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
+    };
   }, []);
 
-  // Function to determine color based on country data value
-  const getColor = (countryName) => {
-    const value = countryData[countryName];
-    if (value <= 30) return "#F3F4F6"; // Light color for low values
-    if (value <= 60) return "#FB8C00"; // Medium color for mid-range values
-    return "#FF5722"; // Dark color for high values
-  };
-
   return (
-    <div style={{ width: "400px", height: "300px", position: "relative" }}>
-      {data && (
-        <>
-          <ComposableMap
-            projection="geoMercator"
-            projectionConfig={{ scale: 200 }}
-          >
-            <ZoomableGroup zoom={1} center={[0, 0]} disableZoom>
-              {" "}
-              <Geographies geography={geoUrl}>
-                {({ geographies }) =>
-                  geographies.map((geo) => {
-                    const countryName = geo.properties.name;
-                    const fillColor = getColor(countryName); // Get color based on the data
-
-                    // Check if the current country is the clicked one
-                    const isClicked = clickedCountry === countryName;
-
-                    return (
-                      <Geography
-                        key={geo.rsmKey}
-                        geography={geo}
-                        fill={fillColor}
-                        onMouseEnter={() => {
-                          const value = countryData[countryName];
-                          setTooltipContent(`${countryName}: ${value}`);
-                        }}
-                        onMouseLeave={() => {
-                          setTooltipContent(""); // Hide tooltip when mouse leaves
-                        }}
-                        onClick={() => {
-                          // Toggle the clicked country on click
-                          setClickedCountry(isClicked ? null : countryName);
-                        }}
-                        style={{
-                          default: {
-                            outline: "none", // Remove outline/border
-                            stroke: "#FFFFFF", // No stroke if clicked, else default stroke color
-                          },
-                          hover: {
-                            stroke:  "#FFFFFF", // No stroke if clicked, else default stroke color
-                            transition: "all 250ms",
-                          },
-                          pressed: {
-                            fill: "red", // Optional: Change color on click
-                          },
-                        }}
-                      />
-                    );
-                  })
-                }
-              </Geographies>
-            </ZoomableGroup>
-          </ComposableMap>
-
-          {/* Tooltip */}
-          {tooltipContent && (
-            <div
-              style={{
-                position: "absolute",
-                bottom: "20px",
-                left: "20px",
-                backgroundColor: "rgba(0, 0, 0, 0.7)",
-                color: "#fff",
-                padding: "10px",
-                borderRadius: "5px",
-              }}
-            >
-              {tooltipContent}
-            </div>
-          )}
-        </>
-      )}
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          backgroundColor: "lightgrey",
+        }}
+      />
     </div>
   );
-};
-
-export default WorldMap;
+}
