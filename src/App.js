@@ -6,7 +6,7 @@ import Chart from './components/Chart';
 
 function App() {
   return (
-    <div className="App" style={{backgroundColor: 'orange', color: 'white'}}>
+    <div className="App" style={{backgroundColor: 'lightgrey'}}>
       <Chart />
     </div>
   );

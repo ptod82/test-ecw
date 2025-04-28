@@ -67,13 +67,12 @@ export default function WorldMap() {
           ],
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
           scales: {
             projection: {
-              axis: "x",
-              projection: "mercator",
-              zoom: 2,
+              axis: 'x',
+              projection: "mercator", // Using the Mercator projection
+              scale: 100, // Adjust the scale value to zoom in (higher value = more zoom)
+              center: [500, 10], // Adjust center to focus on a specific region (latitude, longitude)
             },
           },
           plugins: {
@@ -132,7 +131,7 @@ export default function WorldMap() {
     <div>
       <canvas
         ref={canvasRef}
-        style={{ width: "100vw", height: "80vh" }}
+        style={{height: "30vh" }}
       />
     </div>
   );
