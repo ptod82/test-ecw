@@ -21,13 +21,13 @@ Chart.register(
 );
 
 const countryValues = {
-  Afghanistan: { value: 75, FERs: "F", MYRPs: "M" },
-  Uganda: { value: 65, FERs: "", MYRPs: "M" },
-  Brazil: { value: 80, FERs: "F", MYRPs: "M" },
-  India: { value: 90, FERs: "F", MYRPs: "" },
-  China: { value: 50, FERs: "F", MYRPs: "" },
-  Tanzania: { value: 60, FERs: "F", MYRPs: "M" },
-  Somalia: { value: 55, FERs: "F", MYRPs: "" },
+  Afghanistan: { value: 15, FERs: "F", MYRPs: "M" },
+  Uganda: { value: 25, FERs: "", MYRPs: "M" },
+  Brazil: { value: 45, FERs: "F", MYRPs: "M" },
+  India: { value: 55, FERs: "F", MYRPs: "" },
+  China: { value: 65, FERs: "F", MYRPs: "" },
+  Tanzania: { value: 35, FERs: "F", MYRPs: "M" },
+  Somalia: { value: 50, FERs: "F", MYRPs: "" },
   Benin: { value: 70, FERs: "F", MYRPs: "M" },
 };
 
@@ -37,13 +37,13 @@ export default function WorldMap() {
 
   useEffect(() => {
     async function fetchWorldData() {
-     const res = await fetch(
-       "https://unpkg.com/world-atlas@2.0.2/countries-50m.json"
-     );
-     const world = await res.json();
-     const countries = ChartGeo.topojson
-       .feature(world, world.objects.countries)
-       .features.filter((feature) => feature.properties.name !== "Antarctica" );
+      const res = await fetch(
+        "https://unpkg.com/world-atlas@2.0.2/countries-50m.json"
+      );
+      const world = await res.json();
+      const countries = ChartGeo.topojson
+        .feature(world, world.objects.countries)
+        .features.filter((feature) => feature.properties.name !== "Antarctica");
 
       if (chartRef.current) {
         chartRef.current.destroy();
@@ -62,44 +62,76 @@ export default function WorldMap() {
                 MYRPs: countryValues[d.properties.name]?.MYRPs,
                 FERs: countryValues[d.properties.name]?.FERs,
               })),
-              showGraticule: false,
+              backgroundColor: (context) => {
+                const value = context.raw.value;
+                if (value < 20) return "#ffe6d6";
+                if (value >= 20 && value < 40) return "#fdbb93";
+                if (value >= 40 && value < 60) return "#fc9a5e";
+                return "#fc7828";
+              },
             },
           ],
         },
         options: {
           scales: {
             projection: {
-              axis: 'x',
-              projection: "mercator", // Using the Mercator projection
-              scale: 100, // Adjust the scale value to zoom in (higher value = more zoom)
-              center: [500, 10], // Adjust center to focus on a specific region (latitude, longitude)
+              axis: "x",
+              projection: "mercator",
+            },
+            color: {
+              axis: "x",
+              interpolate: (v) => (v < 0.5 ? "transparent" : "transparent"),
+              legend: {
+                display: false,
+              },
             },
           },
+
           plugins: {
             legend: {
-              display: false,
+              display: true,
+              labels: {
+                generateLabels(chart) {
+                  return [
+                    {
+                      text: "< 20",
+                      fillStyle: "#ffe6d6",
+                      strokeStyle: "#ffe6d6",
+                    },
+                    {
+                      text: "20 - 40",
+                      fillStyle: "#fdbb93",
+                      strokeStyle: "#fdbb93",
+                    },
+                    {
+                      text: "40 - 60",
+                      fillStyle: "#fc9a5e",
+                      strokeStyle: "#fc9a5e",
+                    },
+                    {
+                      text: "> 60",
+                      fillStyle: "#fc7828",
+                      strokeStyle: "#fc7828",
+                    },
+                  ];
+                },
+              },
             },
             tooltip: {
               callbacks: {
                 title: function (context) {
-                  // Get the country name properly
                   return context[0]?.raw?.feature?.properties?.name || "";
                 },
                 label: function (context) {
                   const value = context.raw?.value ?? 0;
-
                   if (value !== 0) {
                     return ` $${value} M`;
                   }
                   return null;
                 },
-                labelTextColor: function () {
-                  return "#000";
-                },
                 footer: function (context) {
                   const MYRPs = context[0]?.raw?.MYRPs || "";
                   const FERs = context[0]?.raw?.FERs || "";
-
                   if (MYRPs || FERs) {
                     return `${MYRPs} ${FERs}`;
                   }
@@ -109,7 +141,6 @@ export default function WorldMap() {
               backgroundColor: "#f1f1f1",
               titleColor: "#000",
               footerColor: "#333",
-              footerFont: { weight: "normal" },
               borderColor: "#ccc",
               borderWidth: 1,
             },
@@ -128,11 +159,8 @@ export default function WorldMap() {
   }, []);
 
   return (
-    <div>
-      <canvas
-        ref={canvasRef}
-        style={{height: "30vh" }}
-      />
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <canvas ref={canvasRef} />
     </div>
   );
 }
