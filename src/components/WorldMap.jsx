@@ -129,9 +129,10 @@ export default function WorldMap() {
   }, []);
 
   return (
-    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+    <div>
       <canvas
         ref={canvasRef}
+        style={{ width: "100vw", height: "80vh" }}
       />
     </div>
   );
