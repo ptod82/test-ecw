@@ -16,6 +16,21 @@ export const LeafletGlobalStyles = createGlobalStyle`
     padding: 5px 10px 8px;
   }
 
+  .leaflet-tooltip {
+  all: initial !important; /* reset all styles */
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  z-index: 9999 !important;
+  position: absolute !important;
+  background: rgb(78, 63, 48) !important;
+  color: white !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgb(78, 63, 48) !important;
+}
+
   .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path{
     cursor: pointer;
     pointer-events: auto;
@@ -29,7 +44,7 @@ export const LeafletGlobalStyles = createGlobalStyle`
   }
 
   .leaflet-interactive:focus {
-    outline: none;
+    outline: none!important;
   }
 
   .leaflet-container {
