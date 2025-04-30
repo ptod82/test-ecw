@@ -1,13 +1,118 @@
 import React, { useEffect, useState, useRef } from "react";
-import "./Counterblocks.css";
+import styled, { css, keyframes } from "styled-components";
 
+// Animations
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const popUp = keyframes`
+  from { transform: scale(0.8); }
+  to { transform: scale(1); }
+`;
+
+const growRing = keyframes`
+  0% {
+    transform: scale(0.1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+`;
+
+// Styled Components
+const CounterContainerWrapper = styled.div`
+  display: flex;
+  gap: 4rem;
+  justify-content: center;
+  margin: 90px 0;
+`;
+
+const CounterBlockWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  max-width: 300px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  background-color: #474747;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(0.8);
+  ${({ visible }) =>
+    visible &&
+    css`
+      animation: ${popUp} 0.5s ease-out forwards;
+    `}
+`;
+
+const CounterNumber = styled.div`
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgb(141, 141, 141);
+  flex: 1;
+  width: 80%;
+  text-align: center;
+  opacity: 0;
+  ${({ visible }) =>
+    visible &&
+    css`
+      animation: ${fadeIn} 2s forwards;
+    `}
+`;
+
+const CounterText = styled.div`
+  text-align: center;
+  margin-bottom: 2rem;
+  flex: 1;
+`;
+
+const IconWrapper = styled.div`
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: auto;
+  margin-bottom: 1rem;
+`;
+
+const CounterIcon = styled.img`
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  z-index: 2;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+`;
+
+const ProgressRing = styled.svg`
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+  z-index: 1;
+`;
+
+const ProgressRingCircle = styled.circle`
+  stroke: #00b4ac;
+  stroke-width: 10;
+  fill: transparent;
+  stroke-dasharray: 251.2;
+  stroke-dashoffset: ${({ offset }) => offset};
+  transition: stroke-dashoffset 0.3s ease;
+`;
+
+// Counter Block Component
 const CounterBlock = ({ target, text, icon, index, startCounter }) => {
   const [count, setCount] = useState(0);
-  const circleRef = useRef(null);
-
-  const formatNumber = (num) => {
-    return new Intl.NumberFormat("de-DE").format(num);
-  };
+  const [offset, setOffset] = useState(251.2);
 
   useEffect(() => {
     if (!startCounter) return;
@@ -16,9 +121,7 @@ const CounterBlock = ({ target, text, icon, index, startCounter }) => {
     const duration = 2000;
     const interval = 30;
     const step = Math.ceil(target / (duration / interval));
-    const totalLength = 2 * Math.PI * 40;
-
-    const circle = circleRef.current;
+    const totalLength = 251.2;
 
     const counter = setInterval(() => {
       start += step;
@@ -28,50 +131,33 @@ const CounterBlock = ({ target, text, icon, index, startCounter }) => {
       }
 
       setCount(start);
-
-      if (circle) {
-        const progress = start / target;
-        const offset = totalLength * (1 - progress);
-        circle.style.strokeDashoffset = offset;
-      }
+      setOffset(totalLength * (1 - start / target));
     }, interval);
 
     return () => clearInterval(counter);
   }, [startCounter, target]);
 
+  const formatNumber = (num) => new Intl.NumberFormat("de-DE").format(num);
+
   return (
-    <div
-      className={`counter-block ${startCounter ? "visible" : ""}`}
-      style={{
-        animationDelay: `${index * 0.3}s`, // Add delay based on index
-      }}
-    >
-      <div className={`counter-number ${startCounter ? "fade-in" : ""}`}>
-        {formatNumber(count)} 
-      </div>
-      <div className="counter-text">{text}</div>
-      <div className="icon-wrapper">
-        <svg className="progress-ring" width="90" height="90">
-          <circle
-            ref={circleRef}
-            className={`progress-ring-circle ${count === target ? "done" : ""}`}
-            stroke="#00b4ac"
-            strokeWidth="10"
-            fill="transparent"
-            r="40"
-            cx="45"
-            cy="45"
-          />
-        </svg>
-        <img src={icon} alt={text} className="counter-icon" />
-      </div>
-    </div>
+    <CounterBlockWrapper visible={startCounter}>
+      <CounterNumber visible={startCounter}>
+        {formatNumber(count)}
+      </CounterNumber>
+      <CounterText>{text}</CounterText>
+      <IconWrapper>
+        <ProgressRing width="90" height="90">
+          <ProgressRingCircle offset={offset} r="40" cx="45" cy="45" />
+        </ProgressRing>
+        <CounterIcon src={icon} alt={text} />
+      </IconWrapper>
+    </CounterBlockWrapper>
   );
 };
 
+// Counter Container Component
 export default function CounterContainer({ id, icons, texts, targetNumbers }) {
   const [startCounter, setStartCounter] = useState(false);
-
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -79,18 +165,15 @@ export default function CounterContainer({ id, icons, texts, targetNumbers }) {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setStartCounter(true); 
-            entry.target.classList.add("visible"); 
+            setStartCounter(true);
           }
         });
       },
-      { threshold: 0.1 } 
+      { threshold: 0.1 }
     );
 
     const container = containerRef.current;
-    if (container) {
-      observer.observe(container);
-    }
+    if (container) observer.observe(container);
 
     return () => {
       if (container) observer.unobserve(container);
@@ -98,7 +181,7 @@ export default function CounterContainer({ id, icons, texts, targetNumbers }) {
   }, []);
 
   return (
-    <div ref={containerRef} className="counter-container" id={id}>
+    <CounterContainerWrapper ref={containerRef} id={id}>
       {targetNumbers.map((num, i) => (
         <CounterBlock
           key={i}
@@ -109,6 +192,6 @@ export default function CounterContainer({ id, icons, texts, targetNumbers }) {
           startCounter={startCounter}
         />
       ))}
-    </div>
+    </CounterContainerWrapper>
   );
 }

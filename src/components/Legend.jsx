@@ -1,45 +1,78 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
+import ReactDOM from "react-dom";
+import {
+  LegendWrapper,
+  LegendTitle,
+  LegendColors,
+  ColorBlockGroup,
+  LegendText,
+  Square,
+  Light,
+  Medium,
+  Dark,
+  TypeContainer,
+  Myrp,
+  Fer,
+  FooterNote,
+} from "./StyledLegend"; 
 
-export default function Legend (){
+function LegendContent() {
+  return (
+    <LegendWrapper>
+      <LegendTitle>
+        Total funds allocated to active programmes, in millions (M)*
+      </LegendTitle>
+      <LegendColors>
+        <ColorBlockGroup>
+          <LegendText>
+            <Square /> &lt; $20M
+          </LegendText>
+          <LegendText>
+            <Light /> $20M - $40M
+          </LegendText>
+          <LegendText>
+            <Medium /> $40M - $60M
+          </LegendText>
+          <LegendText>
+            <Dark /> &gt; $60M
+          </LegendText>
+        </ColorBlockGroup>
+        <TypeContainer>
+          <div>
+            <Myrp>M</Myrp> MYRP
+          </div>
+          <div>
+            <Fer>F</Fer> FER
+          </div>
+        </TypeContainer>
+      </LegendColors>
+      <FooterNote>
+        * Total cumulative funding allocated to grantees for all programmes
+        active in 2024.
+      </FooterNote>
+    </LegendWrapper>
+  );
+}
+
+export default function Legend() {
   const map = useMap();
+  const legendRef = useRef(L.DomUtil.create("div", "leaflet-control legend"));
 
   useEffect(() => {
     const legend = L.control({ position: "bottomleft" });
 
     legend.onAdd = () => {
-      const div = L.DomUtil.create("div", "info legend");
-      div.innerHTML = `
-        <div class="legend-container">
-          <b>Total funds allocated to active programmes, in millions (M)*</b>
-          <div class="legend-colors">
-            <div>
-              <div class="legend-text"><span class="square"></span> < $20M</div>
-              <div class="legend-text"><span class="square light"></span> $20M - $40M</div>
-              <div class="legend-text"><span class="square medium"></span> $40M - $60M</div>
-              <div class="legend-text"><span class="square dark"></span> > $60M</div>
-            </div>
-            <div style="flex-direction: column; display: flex">
-              <div><div class="myrp">M</div> MYRP </div>
-               <div><div class="fer">F</div> FER </div>
-            </div>
-          </div>
-          <span>* Total cumulative funding allocated to grantees for all
-programmes active in 2024.</span>
-        </div>
-      `;
-      return div;
+      return legendRef.current;
     };
 
     legend.addTo(map);
 
-    // Cleanup on unmount
     return () => {
       legend.remove();
     };
   }, [map]);
 
-  return null;
-};
-
+  return ReactDOM.createPortal(<LegendContent />, legendRef.current);
+}
