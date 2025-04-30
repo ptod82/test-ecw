@@ -197,7 +197,7 @@ export default function WorldMa () {
   };
 
   return (
-    <div style={{ height: "80vh", display: "flex", overflow: 'hidden'  }}>
+    <div style={{ height: "80vh", display: "flex", overflow: 'hidden'  }} id="map-custom">
       <MapContainer
         center={[18, 0]}
         zoom={3}

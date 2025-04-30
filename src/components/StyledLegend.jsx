@@ -68,6 +68,10 @@ export const LeafletGlobalStyles = createGlobalStyle`
     margin-top: 4px;
     margin-right: 2px;
   }
+
+  #map-custom .leaflet-control.legend:hover{
+    pointer-event: none!important
+  }   
 `;
 
 
@@ -82,12 +86,6 @@ export const LegendWrapper = styled.div`
   position: absolute;
   bottom: 10px;
   left: 10px;
-
-  &:hover {
-    background-color: rgb(229, 229, 229)!important;
-    border: inherit!important;
-    color: inherit!important;
-  }
 `;
 
 export const LegendTitle = styled.b`
