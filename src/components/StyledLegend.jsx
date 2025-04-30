@@ -70,7 +70,7 @@ export const LeafletGlobalStyles = createGlobalStyle`
   }
 
   #map-custom .leaflet-control.legend:hover{
-    pointer-event: none!important
+    pointer-events: none!important
   }   
 `;
 
