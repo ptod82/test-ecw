@@ -69,9 +69,10 @@ export const LeafletGlobalStyles = createGlobalStyle`
     margin-right: 2px;
   }
 
-  #map-custom .leaflet-control.legend:hover{
-    pointer-events: none!important
-  }   
+  #map-custom .leaflet-control.legend:hover,
+  #map-custom .leaflet-control.legend:hover div {
+    pointer-events: none !important;
+  }
 `;
 
 
