@@ -19,6 +19,12 @@ export const LeafletGlobalStyles = createGlobalStyle`
     top: 10px!important;
     left: 10px!important;
     bottom: auto!important;
+    position: absolute
+  }
+
+  .leaflet-container {
+    pointer-events: auto !important;
+    touch-action: auto !important;
   }
 
   .leaflet-tooltip.tooltip .myrp {
