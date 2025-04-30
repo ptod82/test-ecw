@@ -142,6 +142,7 @@ export default function WorldMap() {
               titleColor: "#000",
               footerColor: "#333",
               borderColor: "#ccc",
+              bodyColor: "#000", 
               borderWidth: 1,
             },
           },

@@ -1,18 +1,147 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import Legend from "./Legend";
 
 const countryData = {
-  USA: 75,
-  Canada: 65,
-  Brazil: 80,
-  India: 90,
-  China: 50,
+  Colombia: {
+    value: 24.4,
+    info: `<span class="myrp">M</span>`,
+  },
+  Ecuador: {
+    value: 15.4,
+    info: `<span class="myrp">M</span>`,
+  },
+  Haiti: {
+    value: 14.3,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Peru: {
+    value: 13.4,
+    info: `<span class="myrp">M</span>`,
+  },
+  Armenia: {
+    value: 1,
+    info: `<span class="fer">F</span>`,
+  },
+  Moldova: {
+    value: 1.5,
+    info: `<span class="fer">F</span>`,
+  },
+  Ukraine: {
+    value: 20.4,
+    info: `<span class="myrp">M</span>`,
+  },
+  Afghanistan: {
+    value: 30,
+    info: `<span class="myrp">M</span>`,
+  },
+  Egypt: {
+    value: 5.5,
+    info: `<span class="fer">F</span>`,
+  },
+  Iraq: {
+    value: 21.5,
+    info: `<span class="myrp">M</span>`,
+  },
+  Lebanon: {
+    value: 17.7,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Libya: {
+    value: 14.6,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  "West Bank": {
+    value: 30,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Syria: {
+    value: 28.5,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Pakistan: {
+    value: 20.7,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Bangladesh: {
+    value: 33.5,
+    info: `<span class="myrp">M</span>`,
+  },
+  Myanmar: {
+    value: 19,
+    info: `<span class="myrp">M</span>`,
+  },
+  Yemen: {
+    value: 5,
+    info: `<span class="fer">F</span>`,
+  },
+  Ethiopia: {
+    value: 72,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Kenya: {
+    value: 2,
+    info: `<span class="fer">F</span>`,
+  },
+  Somalia: {
+    value: 18.9,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  "South Sudan": {
+    value: 41.5,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Sudan: {
+    value: 29.7,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Uganda: {
+    value: 29.6,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  "Burkina Faso": {
+    value: 26.1,
+    info: `<span class="myrp">M</span>`,
+  },
+  Burundi: {
+    value: 12,
+    info: `<span class="myrp">M</span>`,
+  },
+  Cameroon: {
+    value: 25,
+    info: `<span class="myrp">M</span>`,
+  },
+  Mali: {
+    value: 40.8,
+    info: `<span class="myrp">M</span>`,
+  },
+  Niger: {
+    value: 11.1,
+    info: `<span class="myrp">M</span>`,
+  },
+  "Central African Republic": {
+    value: 42.5,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Chad: {
+    value: 50.9,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  Nigeria: {
+    value: 37.6,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
+  "Democratic Republic of the Congo": {
+    value: 28.3,
+    info: `<span class="myrp">M</span> <span class="fer">F</span>`,
+  },
 };
 
-const WorldMap = () => {
+export default function WorldMa () {
   const [geojsonData, setGeojsonData] = useState(null);
+  const mapRef = useRef();
 
   useEffect(() => {
     fetch(
@@ -23,13 +152,21 @@ const WorldMap = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  const getCountryColor = (countryName) => {
-    const value = countryData[countryName];
-    if (!value) return "#ccc"; 
+  useEffect(() => {
+    setTimeout(() => {
+      if (mapRef.current) {
+        mapRef.current.invalidateSize();
+      }
+    }, 100); 
+  }, []);
 
-    if (value <= 50) return "#ffeda0"; // Light color
-    if (value <= 70) return "#feb24c"; // Medium color
-    return "#f03b20"; // Dark color
+  const getCountryColor = (countryName) => {
+    const value = countryData[countryName]?.value;
+    if (!value) return "#ccc"; // No data color
+    if (value < 20) return "#fcd9c4";
+    if (value >= 20 && value < 40) return "#f4ac80";
+    if (value >= 40 && value < 60) return "#cc7540";
+    return "#ff6100"; // Dark color
   };
 
   const style = (feature) => {
@@ -38,41 +175,51 @@ const WorldMap = () => {
       weight: 1,
       opacity: 1,
       color: "white",
-      dashArray: "3",
       fillOpacity: 0.7,
     };
   };
 
+  
   const onEachFeature = (feature, layer) => {
     const countryName = feature.properties.name;
-    const value = countryData[countryName];
+    const palestine = feature.properties.name === "West Bank" ? 'Palestine' : null;
+    const countryInfo = countryData[countryName];
 
-    const tooltipContent = `${countryName}: ${value ? value : "No data"}`;
-    layer.bindTooltip(tooltipContent, { permanent: false, sticky: true });
+    if (countryInfo) {
+      const tooltipContent = `<b>${palestine ? palestine : countryName}</b>: $${countryInfo.value.toFixed(1)}M <br/> ${countryInfo.info}`;
+      layer.bindTooltip(tooltipContent, {
+        permanent: false,
+        sticky: true,
+        direction: "top",
+        className: "tooltip",
+      });
+    }
   };
 
   return (
-    <MapContainer
-      center={[51.505, -0.09]}
-      zoom={2}
-      style={{ height: "100vh", width: "100%" }}
-      zoomControl={false}
-      scrollWheelZoom={false}
-      doubleClickZoom={false}
-      boxZoom={false}
-      dragging={false}
-      worldCopyJump={true}      
-    >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      {geojsonData && (
-        <GeoJSON
-          data={geojsonData}
-          style={style}
-          onEachFeature={onEachFeature}
-        />
-      )}
-    </MapContainer>
+    <div style={{ height: "80vh", display: "flex" }}>
+      <MapContainer
+        center={[15, -10]}
+        zoom={3}
+        style={{ height: "100%", width: "100%", backgroundColor: "#aad3df" }}
+        worldCopyJump={false}
+        boxZoom={false}
+        attributionControl={false}
+        scrollWheelZoom={false}
+        whenCreated={(mapInstance) => {
+          mapRef.current = mapInstance;
+        }}
+      >
+        {geojsonData && (
+          <GeoJSON
+            data={geojsonData}
+            style={style}
+            onEachFeature={onEachFeature}
+          />
+        )}
+        <Legend />
+      </MapContainer>
+    </div>
   );
 };
 
-export default WorldMap;

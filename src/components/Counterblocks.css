@@ -1,0 +1,229 @@
+.counter-container {
+  display: flex;
+  gap: 4rem;
+  justify-content: center;
+  margin: 90px 0;
+}
+
+.counter-block {
+  display: flex;
+  flex: 1;
+  max-width: 300px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  background-color: #474747;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(0.8);
+  animation: none;
+}
+  
+.counter-block.visible {
+  animation: popUp 0.5s ease-out forwards;
+}
+
+.counter-number {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgb(141, 141, 141);
+  flex: 1;
+  width: 80%;
+  text-align: center;opacity: 0;
+  animation: fadeIn 2s forwards;
+  opacity: 0;
+}
+  
+
+.counter-text {
+  text-align: center;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.icon-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: auto;
+  margin-bottom: 1rem;
+}
+
+.counter-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  z-index: 2;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+/* SVG Ring */
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+  z-index: 1;
+}
+
+.progress-ring-circle {
+  stroke-dasharray: 251.2;
+  /* Length of the circle */
+  stroke-dashoffset: 251.2;
+  /* Initial offset */
+}
+
+.progress-ring-circle.done {
+  stroke-dashoffset: 0;
+}
+
+.circle-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 10px solid white;
+  box-sizing: border-box;
+  z-index: 1;
+  animation: grow-ring 2s linear forwards;
+}
+
+.circle-ring.done {
+  animation: none;
+  opacity: 0;
+}
+
+
+
+.myrp {
+  background-color: purple;
+  color: white;
+  border-radius: 40px;
+  font-size: smaller;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid white;
+  margin-top: 4px;
+  margin-right: 5px;
+}
+
+.fer {
+  background-color: red;
+  color: white;
+  border-radius: 40px;
+  font-size: smaller;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid white;
+  margin-top: 4px;
+  margin-right: 2px;
+}
+
+.legend-container {
+  background-color: rgb(229, 229, 229);
+  max-width: 200px;
+  border: 1px solid #999;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.legend-text{
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.legend-container span {
+  font-size: smaller;
+  font-style: italic;
+  line-height: 1.2;
+  display: block;
+}
+
+.legend-colors {
+  display: flex;
+}
+
+.legend-colors div {
+  flex: 1 1 auto;
+  margin: 10px 0;
+}
+
+.square {
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  background-color: #fcd9c4;
+}
+
+.light{
+  background-color: #f4ac80;
+}
+
+.medium{
+  background-color: #cc7540;
+}
+
+.dark{
+  background-color: #ff6100;
+}
+
+
+.tooltip {
+  font-size: 15px;
+  background-color: rgb(78, 63, 48) !important;
+  border-color: rgb(78, 63, 48) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  padding: 5px 10px 8px 10px !important;
+}
+
+.leaflet-interactive:focus {
+  outline: none;
+}
+
+@keyframes grow-ring {
+  0% {
+    transform: scale(0.1);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+ @keyframes fadeIn {
+   0% {
+     opacity: 0;
+   }
+
+   100% {
+     opacity: 1;
+   }
+ }
+
+ @keyframes popUp {
+   0% {
+     transform: scale(0.8);
+   }
+
+   100% {
+     transform: scale(1);
+   }
+ }
