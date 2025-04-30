@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
 export const LeafletGlobalStyles = createGlobalStyle`
-.leaflet-tooltip.custom-tooltip {
+  .leaflet-tooltip.custom-tooltip {
     display: block !important;
     visibility: visible !important;
     pointer-events: auto !important;
@@ -14,6 +14,11 @@ export const LeafletGlobalStyles = createGlobalStyle`
     color: white;
     border-radius: 8px;
     padding: 5px 10px 8px;
+  }
+
+  .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path{
+    cursor: pointer;
+    pointer-events: auto;
   }
 
   .leaflet-container .leaflet-control-container .leaflet-top.leaflet-left{
