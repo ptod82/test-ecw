@@ -84,9 +84,9 @@ export const LegendWrapper = styled.div`
   left: 10px;
 
   &:hover {
-    background-color: rgb(229, 229, 229);
-    border: inherit;
-    color: inherit;
+    background-color: rgb(229, 229, 229)!important;
+    border: inherit!important;
+    color: inherit!important;
   }
 `;
 
