@@ -191,15 +191,15 @@ export default function WorldMa () {
         permanent: false,
         sticky: true,
         direction: "top",
-        className: "tooltip",
+        className: "custom-tooltip",
       });
     }
   };
 
   return (
-    <div style={{ height: "80vh", display: "flex", overflow: 'hidden' }}>
+    <div style={{ height: "80vh", display: "flex", overflow: 'hidden'  }}>
       <MapContainer
-        center={[0, 0]}
+        center={[18, 0]}
         zoom={3}
         style={{ height: "100%", width: "100%", backgroundColor: "#aad3df" }}
         worldCopyJump={false}

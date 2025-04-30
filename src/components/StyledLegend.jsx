@@ -2,13 +2,18 @@ import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
 export const LeafletGlobalStyles = createGlobalStyle`
-  .leaflet-tooltip.tooltip {
+.leaflet-tooltip.custom-tooltip {
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+
     font-size: 15px;
-    background-color: rgb(78, 63, 48) !important;
-    border-color: rgb(78, 63, 48) !important;
-    color: white !important;
-    border-radius: 8px !important;
-    padding: 5px 10px 8px 10px !important;
+    background-color: rgb(78, 63, 48);
+    border: 1px solid rgb(78, 63, 48);
+    color: white;
+    border-radius: 8px;
+    padding: 5px 10px 8px;
   }
 
   .leaflet-container .leaflet-control-container .leaflet-top.leaflet-left{
@@ -18,12 +23,16 @@ export const LeafletGlobalStyles = createGlobalStyle`
     position: absolute
   }
 
+  .leaflet-interactive:focus {
+    outline: none;
+  }
+
   .leaflet-container {
     pointer-events: auto !important;
     touch-action: auto !important;
   }
 
-  .leaflet-tooltip.tooltip .myrp {
+  .leaflet-tooltip.custom-tooltip .myrp {
     background-color: purple;
     color: white;
     border-radius: 40px;
@@ -39,7 +48,7 @@ export const LeafletGlobalStyles = createGlobalStyle`
   }
 
   /* FER Circle */
-  .leaflet-tooltip.tooltip .fer {
+  .leaflet-tooltip.custom-tooltip .fer {
     background-color: red;
     color: white;
     border-radius: 40px;
