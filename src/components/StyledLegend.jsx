@@ -20,7 +20,19 @@ export const LeafletGlobalStyles = createGlobalStyle`
   .leaflet-tooltip {
     position: absolute;
     top: 0px;
-    left: 0
+    left: 0;
+
+     &::before {
+      content: "";
+      position: absolute;
+      bottom: 5px; 
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px 6px 0;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
   }
   
 
