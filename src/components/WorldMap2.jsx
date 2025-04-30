@@ -206,6 +206,7 @@ export default function WorldMa () {
         boxZoom={false}
         attributionControl={false}
         scrollWheelZoom={false}
+        doubleClickZoom={false} 
         whenCreated={(mapInstance) => {
           mapRef.current = mapInstance;
         }}
