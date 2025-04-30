@@ -9,6 +9,16 @@ export const LeafletGlobalStyles = createGlobalStyle`
     color: white !important;
     border-radius: 8px !important;
     padding: 5px 10px 8px 10px !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .leaflet-container .leaflet-control-container .leaflet-top.leaflet-left{
+    top: 10px!important;
+    left: 10px!important;
+    bottom: auto!important;
   }
 
   .leaflet-tooltip.tooltip .myrp {
