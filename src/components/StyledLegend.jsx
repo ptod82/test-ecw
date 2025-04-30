@@ -12,9 +12,9 @@ export const LeafletGlobalStyles = createGlobalStyle`
   }
 
   .leaflet-container .leaflet-control-container .leaflet-top.leaflet-left{
-    top: 10px!important;
-    left: 10px!important;
-    bottom: auto!important;
+    left: 1vw!important;
+    bottom: 250px!important;
+    top: auto!important;
     position: absolute
   }
 

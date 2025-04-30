@@ -157,7 +157,7 @@ export default function WorldMa () {
       if (mapRef.current) {
         mapRef.current.invalidateSize();
       }
-    }, 100); 
+    }, 1000); 
   }, []);
 
   const getCountryColor = (countryName) => {
