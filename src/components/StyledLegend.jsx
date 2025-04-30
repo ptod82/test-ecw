@@ -25,7 +25,7 @@ export const LeafletGlobalStyles = createGlobalStyle`
      &::before {
       content: "";
       position: absolute;
-      bottom: 5px; 
+      bottom: 0px; 
       left: 50%;
       margin-left: -6px;
       border-width: 6px 6px 0;
