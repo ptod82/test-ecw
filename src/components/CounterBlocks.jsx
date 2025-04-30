@@ -38,11 +38,10 @@ const CounterBlockWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  color: white;
-  background-color: #474747;
+  background-color: #f1f1f1;
   border-radius: 12px;
   padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transform: scale(0.8);
 
   ${({ visible, index }) =>
@@ -58,7 +57,7 @@ const CounterNumber = styled.div`
   font-weight: bold;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgb(141, 141, 141);
+  border-bottom: 1px solid #ccc;
   flex: 1;
   width: 80%;
   text-align: center;

@@ -15,6 +15,13 @@ export const LeafletGlobalStyles = createGlobalStyle`
     border-radius: 8px;
     padding: 5px 10px 8px;
   }
+
+
+  .leaflet-tooltip {
+    position: absolute;
+    top: 0px;
+    left: 0
+  }
   
 
   .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path{
