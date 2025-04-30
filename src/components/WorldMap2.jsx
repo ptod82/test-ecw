@@ -199,7 +199,7 @@ export default function WorldMa () {
   return (
     <div style={{ height: "80vh", display: "flex" }}>
       <MapContainer
-        center={[15, -10]}
+        center={[0, 0]}
         zoom={3}
         style={{ height: "100%", width: "100%", backgroundColor: "#aad3df" }}
         worldCopyJump={false}

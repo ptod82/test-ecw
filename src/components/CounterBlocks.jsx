@@ -44,10 +44,12 @@ const CounterBlockWrapper = styled.div`
   padding: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transform: scale(0.8);
-  ${({ visible }) =>
+
+  ${({ visible, index }) =>
     visible &&
     css`
       animation: ${popUp} 0.5s ease-out forwards;
+      animation-delay: ${index * 0.2}s;
     `}
 `;
 
@@ -140,7 +142,7 @@ const CounterBlock = ({ target, text, icon, index, startCounter }) => {
   const formatNumber = (num) => new Intl.NumberFormat("de-DE").format(num);
 
   return (
-    <CounterBlockWrapper visible={startCounter}>
+    <CounterBlockWrapper visible={startCounter} index={index}>
       <CounterNumber visible={startCounter}>
         {formatNumber(count)}
       </CounterNumber>
@@ -181,7 +183,7 @@ export default function CounterContainer({ id, icons, texts, targetNumbers }) {
   }, []);
 
   return (
-    <CounterContainerWrapper ref={containerRef} id={id}>
+    <CounterContainerWrapper ref={containerRef} id={id} >
       {targetNumbers.map((num, i) => (
         <CounterBlock
           key={i}
