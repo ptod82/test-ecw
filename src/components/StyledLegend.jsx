@@ -19,13 +19,13 @@ export const LeafletGlobalStyles = createGlobalStyle`
 
   .leaflet-tooltip {
     position: absolute;
-    top: 0px;
+    top: -5px;
     left: 0;
 
      &::before {
       content: "";
       position: absolute;
-      bottom: 0px; 
+      bottom: -6px; 
       left: 50%;
       margin-left: -6px;
       border-width: 6px 6px 0;
