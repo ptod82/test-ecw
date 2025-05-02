@@ -42,8 +42,8 @@ export const LeafletGlobalStyles = createGlobalStyle`
   }
 
   .leaflet-container .leaflet-control-container .leaflet-top.leaflet-left{
-    left: 1vw!important;
-    bottom: 250px!important;
+    left: 20px!important;
+    bottom: 260px!important;
     top: auto!important;
     position: absolute
   }
@@ -53,7 +53,6 @@ export const LeafletGlobalStyles = createGlobalStyle`
   }
 
   .leaflet-container {
-    pointer-events: auto !important;
     touch-action: auto !important;
   }
 

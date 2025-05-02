@@ -29,12 +29,19 @@ const CounterContainerWrapper = styled.div`
   gap: 4rem;
   justify-content: center;
   margin: 90px 0;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 768px) {
+    flex-direction: row; 
+  }
 `;
 
 const CounterBlockWrapper = styled.div`
   display: flex;
   flex: 1;
   max-width: 300px;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
@@ -48,7 +55,7 @@ const CounterBlockWrapper = styled.div`
     visible &&
     css`
       animation: ${popUp} 0.5s ease-out forwards;
-      animation-delay: ${index * 0.2}s;
+      animation-delay: ${index * 0.3}s;
     `}
 `;
 
@@ -61,12 +68,8 @@ const CounterNumber = styled.div`
   flex: 1;
   width: 80%;
   text-align: center;
-  opacity: 0;
-  ${({ visible }) =>
-    visible &&
-    css`
-      animation: ${fadeIn} 2s forwards;
-    `}
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  transition: opacity 0.5s ease;
 `;
 
 const CounterText = styled.div`
@@ -115,28 +118,32 @@ const CounterBlock = ({ target, text, icon, index, startCounter }) => {
   const [count, setCount] = useState(0);
   const [offset, setOffset] = useState(251.2);
 
-  useEffect(() => {
-    if (!startCounter) return;
+ useEffect(() => {
+   if (!startCounter) return;
 
-    let start = 0;
-    const duration = 2000;
-    const interval = 30;
-    const step = Math.ceil(target / (duration / interval));
-    const totalLength = 251.2;
+   const delay = index * 300; // milliseconds
+   const duration = 2000;
+   const interval = 30;
+   const step = Math.ceil(target / (duration / interval));
+   const totalLength = 251.2;
 
-    const counter = setInterval(() => {
-      start += step;
-      if (start >= target) {
-        start = target;
-        clearInterval(counter);
-      }
+   const timer = setTimeout(() => {
+     let start = 0;
+     const counter = setInterval(() => {
+       start += step;
+       if (start >= target) {
+         start = target;
+         clearInterval(counter);
+       }
 
-      setCount(start);
-      setOffset(totalLength * (1 - start / target));
-    }, interval);
+       setCount(start);
+       setOffset(totalLength * (1 - start / target));
+     }, interval);
+   }, delay);
 
-    return () => clearInterval(counter);
-  }, [startCounter, target]);
+   return () => clearTimeout(timer);
+  }, [startCounter, target, index]);
+
 
   const formatNumber = (num) => new Intl.NumberFormat("de-DE").format(num);
 
