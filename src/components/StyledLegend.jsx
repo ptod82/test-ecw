@@ -53,6 +53,7 @@ export const LeafletGlobalStyles = createGlobalStyle`
   }
 
   .leaflet-container {
+    pointer-events: none !important;
     touch-action: auto !important;
   }
 
