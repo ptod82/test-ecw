@@ -53,8 +53,12 @@ export const LeafletGlobalStyles = createGlobalStyle`
   }
 
   .leaflet-container {
-    pointer-events: none !important;
+    pointer-events: auto !important;
     touch-action: auto !important;
+  }
+
+  .leaflet-container .leaflet-control-container .leaflet-control.legend{
+    pointer-events: none !important;
   }
 
   .leaflet-tooltip.custom-tooltip .myrp {
