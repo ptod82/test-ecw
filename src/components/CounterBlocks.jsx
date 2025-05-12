@@ -144,9 +144,6 @@ const CounterBlock = ({ target, text, icon, index, startCounter }) => {
    return () => clearTimeout(timer);
   }, [startCounter, target, index]);
 
-
-  
-
   const formatNumber = (num) => new Intl.NumberFormat("de-DE").format(num);
 
   return (
